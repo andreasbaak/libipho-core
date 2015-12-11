@@ -1,0 +1,36 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides: libipho
+# Required-Start: $remote_fs $syslog $networking
+# Required-Stop: $remote_fs $syslog
+# Default-Start: 2 3 4 5
+# Default-Stop: 0 1 6
+# Short-Description: Photobooth
+# Description: This file starts and stops the Libipho photobooth
+#
+### END INIT INFO
+
+[ -f /etc/profile.d/set-libipho-base ] && . /etc/profile.d/set-libipho-base
+
+if [ -z "$LIBIPHO_BASE" ] ;  then
+  echo "LIBIPHO_BASE is not set, please set it in /etc/profile.d/set-libipho-base" >&2
+  exit 1
+fi
+
+PIDFILE=$LIBIPHO_BASE/libipho.pid
+
+case "$1" in
+ start)
+   su libipho -c "exec 1>>$LIBIPHO_BASE/libipho.log && exec 2>>$LIBIPHO_BASE/libipho.log && $LIBIPHO_BASE/capture.sh" &
+   echo $! > $PIDFILE
+   ;;
+ stop)
+   cat $PIDFILE | xargs kill
+   rm $PIDFILE
+   ;;
+ *)
+   echo "Usage: libipho {start|stop}" >&2
+   exit 3
+   ;;
+esac
+
