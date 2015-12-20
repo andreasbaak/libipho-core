@@ -26,6 +26,9 @@ export SCREEN_TARGET_FILE=${HTML_DIR}/screen.html
 
 export SCREEN_LOCK=/var/volatile/tmp/libipho-screen-lock
 
+export USE_ANDROID_SCREEN=false
+export LIBIPHO_SCREEN_FIFO=/var/volatile/tmp/libipho-screen-fifo
+
 export GPIO_PIN_TRIGGER=67
 export GPIO_PIN_DELETE_LAST=30
 export GPIO_PIN_DELETE_ALL=60

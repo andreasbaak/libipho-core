@@ -22,7 +22,11 @@ while true; do
   GPIO_RES=`gpio-notify ${GPIO_PIN}`
   if [[ "${GPIO_RES}" = "${GPIO_PIN} 0" ]]; then
     echo "[ Trigger changed from 1 to 0. Showing wait screen. ]"
-	${LIBIPHO_BASE}/screen/show_wait_screen.sh
+    if [ "${USE_ANDROID_SCREEN}" = true ]; then
+        echo "+" > ${LIBIPHO_SCREEN_FIFO}
+    else
+        ${LIBIPHO_BASE}/screen/show_wait_screen.sh
+    fi
   fi
   if [[ "${GPIO_RES}" = "${GPIO_PIN} 1" ]]; then
     echo "[ Trigger changed from 0 to 1. Doing nothing. ]"

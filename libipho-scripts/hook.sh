@@ -33,7 +33,11 @@ echo "[ Moving image ${PICTURE_FILE} to ${FULL_FILENAME} ]"
 
 mv ${PICTURE_FILE} ${FULL_FILENAME}
 
-${LIBIPHO_BASE}/tools/run_with_lock.sh ${SCREEN_LOCK} ${LIBIPHO_BASE}/screen/update_libipho_screen.sh ${PICTURE_FILE}
+if [ "${USE_ANDROID_SCREEN}" = true ]; then
+  echo ${FULL_FILENAME} > ${LIBIPHO_SCREEN_FIFO}
+else
+  ${LIBIPHO_BASE}/tools/run_with_lock.sh ${SCREEN_LOCK} ${LIBIPHO_BASE}/screen/update_libipho_screen.sh ${PICTURE_FILE}
+fi
 
 echo "[ Creating gallery image... ]"
 epeg -m 1280 -q 80 ${FULL_FILENAME} ${FULL_GALLERY_FILENAME}

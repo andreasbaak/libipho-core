@@ -15,5 +15,14 @@
 #
 
 cd ${LIBIPHO_BASE}
+source libipho_env.sh
+
 ${LIBIPHO_BASE}/create_directories.sh
+
+if [ "${USE_ANDROID_SCREEN}" = true ]; then
+  # Start the server application that transmits the images to the Android app
+  libipho-screen-server ${LIBIPHO_SCREEN_FIFO} &
+  echo $! > libipho-screen-server.pid
+fi
+
 gphoto2 --hook-script=${LIBIPHO_BASE}/hook.sh --capture-tethered --keep --keep-raw
