@@ -25,4 +25,8 @@ if [ "${USE_ANDROID_SCREEN}" = true ]; then
   echo $! > libipho-screen-server.pid
 fi
 
-gphoto2 --hook-script=${LIBIPHO_BASE}/hook.sh --capture-tethered --keep --keep-raw
+# Make the gphoto2 command interruptible by a signal
+trap 'kill -SIGTERM $GPHOTO_PID' SIGTERM SIGINT
+gphoto2 --hook-script=${LIBIPHO_BASE}/hook.sh --quiet --capture-tethered --keep --keep-raw &
+GPHOTO_PID=$!
+wait $GPHOTO_PID
