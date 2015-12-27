@@ -18,12 +18,6 @@ source ${LIBIPHO_BASE}/libipho_env.sh
 
 GALLERY_LIST=${HTML_DIR}/js/libipho-pictures.js
 
-STATE0="NOT_PRESSED"
-STATE1="PRESSED"
-
-B0_STATE=${STATE0}
-B1_STATE=${STATE0}
-
 GPIO_PIN_0=/sys/class/gpio/gpio${GPIO_PIN_DELETE_LAST}/value # Delete last picture
 GPIO_PIN_1=/sys/class/gpio/gpio${GPIO_PIN_DELETE_ALL}/value # Delete all pictures
 
