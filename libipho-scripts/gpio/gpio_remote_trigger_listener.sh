@@ -15,6 +15,7 @@
 #
 
 source ${LIBIPHO_BASE}/libipho_env.sh
+source ${LIBIPHO_BASE}/tools/log_util.sh
 
 GPIO_PIN=/sys/class/gpio/gpio${GPIO_PIN_TRIGGER}/value # Trigger from the remote control
 
@@ -29,7 +30,7 @@ while true; do
   wait $GPIO_NOTIFY_PID
 
   if [[ "${GPIO_RES}" = "${GPIO_PIN} 0" ]]; then
-    echo "[ Trigger changed from 1 to 0. Showing wait screen. ]"
+    log "Trigger changed from 1 to 0. Showing wait screen."
     if [ "${USE_ANDROID_SCREEN}" = true ]; then
         echo "+" > ${LIBIPHO_SCREEN_FIFO}
     else
@@ -37,6 +38,6 @@ while true; do
     fi
   fi
   if [[ "${GPIO_RES}" = "${GPIO_PIN} 1" ]]; then
-    echo "[ Trigger changed from 0 to 1. Doing nothing. ]"
+    log "Trigger changed from 0 to 1. Doing nothing."
   fi
 done

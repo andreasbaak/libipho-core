@@ -15,6 +15,7 @@
 #
 
 source ${LIBIPHO_BASE}/libipho_env.sh
+source ${LIBIPHO_BASE}/tools/log_util.sh
 
-echo "[ Making 'please wait' overlay visible ]"
+log "Making 'please wait' overlay in the html visible"
 ${LIBIPHO_BASE}/tools/run_with_lock.sh ${SCREEN_LOCK} sed -i "s|display:none|display:block|g" ${SCREEN_TARGET_FILE}

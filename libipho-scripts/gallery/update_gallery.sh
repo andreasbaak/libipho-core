@@ -14,8 +14,10 @@
 # License: http://www.gnu.org/licenses/gpl.html GPL version 2
 #
 
-echo "[ Gallery update started. ]"
 source ${LIBIPHO_BASE}/libipho_env.sh
+source ${LIBIPHO_BASE}/tools/log_util.sh
+
+log "Begin"
 
 if [ $# -ne 1 ]; then
     echo "Usage: $0 image_filename"
@@ -35,4 +37,4 @@ sed "\$i<a href=\"${GALLERY_RELATIVE_DIR}/$PICTURE\"> <img src=\"${THUMBNAIL_REL
 
 # swap the file with the real target
 mv $TEMP_TARGET_FILE $TARGET_FILE
-echo "[ Gallery update ended. ]"
+log "End"

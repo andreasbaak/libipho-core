@@ -15,12 +15,16 @@
 #
 
 source ${LIBIPHO_BASE}/libipho_env.sh
+source ${LIBIPHO_BASE}/tools/log_util.sh
+
+log "Begin"
+
 TARGET_FILE=${HTML_DIR}/js/libipho-pictures.js
-echo "[ Resetting gallery ... ]"
+
 rm ${TARGET_FILE}
 cat >> ${TARGET_FILE} << EOL
 document.write('\\
 ');
 EOL
-echo "[ Gallery reset done. ]"
+log "End"
 

@@ -25,6 +25,11 @@ if [ "${USE_ANDROID_SCREEN}" = true ]; then
   echo $! > libipho-screen-server.pid
 fi
 
+source tools/log_util.sh
+# All stdout and stderr of gphoto and the hook scripts called by gphoto
+# will be logged to syslog with the following command.
+logAllOutput
+
 # Make the gphoto2 command interruptible by a signal
 trap 'kill -SIGTERM $GPHOTO_PID' SIGTERM SIGINT
 gphoto2 --hook-script=${LIBIPHO_BASE}/hook.sh --quiet --capture-tethered --keep --keep-raw &

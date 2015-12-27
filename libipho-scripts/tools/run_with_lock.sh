@@ -40,12 +40,14 @@ LOCKDIR="$1"
 PIDFILE="${LOCKDIR}/PID"
 EXECUTABLE="$2"
 
-echo "[ Trying to lock ${LOCKDIR} ]"
+source ${LIBIPHO_BASE}/tools/log_util.sh
+
+log "Trying to lock ${LOCKDIR}"
 if mkdir "${LOCKDIR}" &>/dev/null; then
     # trap if storing the PID fails
-    trap 'echo "[ Lock ${LOCKDIR} released, PID $$. ]"
+    trap 'log "Lock ${LOCKDIR} released, PID $$."
           rm -rf "${LOCKDIR}"' 0
-    echo "[ Lock ${LOCKDIR} acquired, PID $$. ]"
+    log "Lock ${LOCKDIR} acquired, PID $$."
     echo "$$" >"${PIDFILE}"
 	# eat the first two command line arguments
 	shift 2
@@ -54,14 +56,14 @@ else
     # lock failed, now check if the other PID is alive
     OTHERPID="$(cat "${PIDFILE}" 2> /dev/null)"
     if [ $? != 0 ]; then
-      echo "[ Lock ${LOCKDIR} failed, but is about to be released. Retrying. ]"
+      log "Lock ${LOCKDIR} failed, but is about to be released. Retrying."
       exec "$0" "$@"
 	else
-      echo "[ Lock ${LOCKDIR} failed. Waiting for PID: $OTHERPID ]"
+      log "Lock ${LOCKDIR} failed. Waiting for PID: $OTHERPID"
     fi
 
     if ! kill -0 $OTHERPID &>/dev/null; then
-        echo "[ Removing stale lock ${LOCKDIR} of nonexistant PID ${OTHERPID} ]"
+        log "Removing stale lock ${LOCKDIR} of nonexistant PID ${OTHERPID}"
         rm -rf "${LOCKDIR}"
     else
         sleep 1

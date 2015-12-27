@@ -20,12 +20,13 @@ if [ $# -ne 1 ]; then
 fi
 
 source ${LIBIPHO_BASE}/libipho_env.sh
+source ${LIBIPHO_BASE}/tools/log_util.sh
 
 PLACEHOLDER="##IMAGE_FULL_FILENAME##"
 IMAGE_FILENAME=$1
 IMAGE_RELATIVE_FILENAME=${PICTURE_RELATIVE_DIR}/${IMAGE_FILENAME}
 
-echo "[ Updating libipho screen, image filename: $IMAGE_FILENAME ]"
+log "Updating libipho screen, image filename: $IMAGE_FILENAME"
 sed "s|${PLACEHOLDER}|${IMAGE_RELATIVE_FILENAME}|g" ${SCREEN_TEMPLATE_FILE} > ${SCREEN_TARGET_FILE}.tmp
 mv ${SCREEN_TARGET_FILE}.tmp ${SCREEN_TARGET_FILE}
-echo "[ Libipho screen updated. ]"
+log "Libipho screen updated."
