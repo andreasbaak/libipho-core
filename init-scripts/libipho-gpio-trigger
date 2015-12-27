@@ -13,8 +13,8 @@
 
 [ -f /etc/profile.d/set-libipho-base ] && . /etc/profile.d/set-libipho-base
 
-if [ -z "$LIBIPHO_BASE" ] ;  then
-  echo "LIBIPHO_BASE is not set, please set it in /etc/profile.d/set-libipho-base" >&2
+if [ -z "$LIBIPHO_BASE" ] || [ -z "$LIBIPHO_WWW" ];  then
+  echo "LIBIPHO_BASE or LIBIPHO_WWW is not set, please set it in /etc/profile.d/set-libipho-base" >&2
   exit 1
 fi
 

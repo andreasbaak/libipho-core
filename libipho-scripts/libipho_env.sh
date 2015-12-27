@@ -14,7 +14,12 @@
 # License: http://www.gnu.org/licenses/gpl.html GPL version 2
 #
 
-export HTML_DIR=${HOME}/www
+if [ -z "$LIBIPHO_WWW" ] || [ -z "$LIBIPHO_BASE" ]; then
+    logger -s -t "libipho_env.sh" "Error: LIBIPHO_BASE or LIBIPHO_WWW variable is unset."
+    exit 1
+fi
+
+export HTML_DIR=${LIBIPHO_WWW}
 export PICTURE_RELATIVE_DIR=libipho-pictures
 export THUMBNAIL_RELATIVE_DIR=${PICTURE_RELATIVE_DIR}/thumbnails
 export GALLERY_RELATIVE_DIR=${PICTURE_RELATIVE_DIR}/gallery

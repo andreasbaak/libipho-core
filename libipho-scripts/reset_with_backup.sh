@@ -16,7 +16,8 @@
 
 source ${LIBIPHO_BASE}/libipho_env.sh
 
-BACKUP_DIR_PREFIX=${HOME}/pictures-backup
+mkdir -p $LIBIPHO_BACKUP_BASE
+BACKUP_DIR_PREFIX=$LIBIPHO_BACKUP_BASE/pictures-backup
 
 NUM=1
 while [[ -d "${BACKUP_DIR_PREFIX}_${NUM}" ]]; do
