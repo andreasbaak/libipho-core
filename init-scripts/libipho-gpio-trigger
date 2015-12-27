@@ -18,22 +18,40 @@ if [ -z "$LIBIPHO_BASE" ] ;  then
   exit 1
 fi
 
-PIDFILE=$LIBIPHO_BASE/gpio_trigger_listener.pid
+DAEMON=$LIBIPHO_BASE/gpio/gpio_remote_trigger_listener.sh
+NAME="libipho-gpio-trigger"
+DESC="process that reacts on the remote control of the camera"
+PIDFILE="/var/run/$NAME.pid"
+
+STARTOPTS="--start --background --pidfile=$PIDFILE --make-pidfile --chuid libipho:libipho"
+STOPOPTS="--stop --pidfile=$PIDFILE"
 
 case "$1" in
- start)
-   $LIBIPHO_BASE/gpio/gpio_trigger_enable.sh
-   su libipho -c "exec 1>>$LIBIPHO_BASE/libipho.log && exec 2>>$LIBIPHO_BASE/libipho.log && $LIBIPHO_BASE/gpio/gpio_remote_trigger_listener.sh" &
-   echo $! > $PIDFILE
-   ;;
- stop)
-   cat $PIDFILE | xargs kill
-   rm $PIDFILE
-   $LIBIPHO_BASE/gpio/gpio_trigger_disable.sh
-   ;;
+  start)
+    echo -n "Starting $DESC: "
+    $LIBIPHO_BASE/gpio/gpio_trigger_enable.sh
+    start-stop-daemon $STARTOPTS -x "$DAEMON"
+    echo "$NAME."
+    ;;
+  stop)
+    echo -n "Stopping $DESC: "
+    start-stop-daemon $STOPOPTS
+    $LIBIPHO_BASE/gpio/gpio_trigger_disable.sh
+    rm -f $PIDFILE
+    echo "$NAME."
+    ;;
+  restart|force-reload)
+    echo -n "Restarting $DESC: "
+    $LIBIPHO_BASE/gpio/gpio_trigger_disable.sh
+    start-stop-daemon $STOPOPTS
+    sleep 1
+    $LIBIPHO_BASE/gpio/gpio_trigger_enable.sh
+    start-stop-daemon $STARTOPTS -x "$DAEMON"
+    echo "$NAME."
+    ;;
  *)
-   echo "Usage: libipho-gpio-trigger {start|stop}" >&2
-   exit 3
+   echo "Usage: $NAME {start|stop|restart|force-reload}" >&2
+   exit 1
    ;;
 esac
 
