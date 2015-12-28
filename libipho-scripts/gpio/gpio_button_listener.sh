@@ -21,8 +21,16 @@ GALLERY_LIST=${HTML_DIR}/js/libipho-pictures.js
 GPIO_PIN_0=/sys/class/gpio/gpio${GPIO_PIN_DELETE_LAST}/value # Delete last picture
 GPIO_PIN_1=/sys/class/gpio/gpio${GPIO_PIN_DELETE_ALL}/value # Delete all pictures
 
+FIFO=/tmp/gpio-button-listener-fifo
+mkfifo $FIFO
+
 while true; do
-  GPIO_RES=`gpio-notify ${GPIO_PIN_0} ${GPIO_PIN_1}`
+  trap 'trap - SIGTERM && kill ${GPIO_NOTIFY_PID} && exit 0' SIGTERM SIGINT
+  gpio-notify ${GPIO_PIN_0} ${GPIO_PIN_1} > $FIFO &
+  GPIO_NOTIFY_PID=$!
+  read GPIO_RES < $FIFO
+  wait $GPIO_NOTIFY_PID
+
   if [[ "${GPIO_RES}" = "${GPIO_PIN_1} 0" ]]; then
     echo "[ Button 1 has been pressed: Deleting all pictures. ]"
 	${LIBIPHO_BASE}/reset_with_backup.sh
