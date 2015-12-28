@@ -64,7 +64,7 @@ else
         echo "[ Removing stale lock ${LOCKDIR} of nonexistant PID ${OTHERPID} ]"
         rm -rf "${LOCKDIR}"
     else
-        sleep 0.5
+        sleep 1
     fi
     exec "$0" "$@"
 fi
