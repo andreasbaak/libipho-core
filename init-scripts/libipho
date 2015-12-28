@@ -27,6 +27,17 @@ STOPOPTS="--stop --pidfile=$PIDFILE"
 
 case "$1" in
   start)
+    # start-stop-daemon fails to recognize an already running instance
+    # of the process and therefore does not prevent us from starting
+    # the process twice. Therefore, we explicitly check for the
+    # existence of a process with the given PID and abort if
+    # a corresponding process has been found.
+    start-stop-daemon -p $PIDFILE -t -K 2>&1 > /dev/null
+    ISDEAD=$?
+    if [ "$ISDEAD" = "0" ]; then
+      echo "A process the the PID specified in $PIDFILE is already running."
+      exit 0
+    fi
     echo -n "Starting $DESC: "
     start-stop-daemon $STARTOPTS -x "$DAEMON"
     echo "$NAME."
