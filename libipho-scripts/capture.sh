@@ -19,12 +19,6 @@ source libipho_env.sh
 
 ${LIBIPHO_BASE}/create_directories.sh
 
-if [ "${USE_ANDROID_SCREEN}" = true ]; then
-  # Start the server application that transmits the images to the Android app
-  libipho-screen-server ${LIBIPHO_SCREEN_FIFO} &
-  echo $! > libipho-screen-server.pid
-fi
-
 source tools/log_util.sh
 # All stdout and stderr of gphoto and the hook scripts called by gphoto
 # will be logged to syslog with the following command.

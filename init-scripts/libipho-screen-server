@@ -1,0 +1,51 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides: libipho-screen-server
+# Required-Start: $remote_fs $syslog $networking $libipho
+# Required-Stop: $remote_fs $syslog
+# Default-Start: 2 3 4 5
+# Default-Stop: 0 1 6
+# Short-Description: Libipho-screen-server
+# Description: This file starts and stops a server for an Android front-end
+#
+### END INIT INFO
+
+[ -f /etc/profile.d/set-libipho-base ] && . /etc/profile.d/set-libipho-base
+
+if [ -z "${LIBIPHO_SCREEN_FIFO}" ];  then
+  echo "LIBIPHO_SCREEN_FIFO is not set, please set it in /etc/profile.d/set-libipho-base" >&2
+  exit 1
+fi
+       
+DAEMON=/usr/bin/libipho-screen-server
+NAME="libipho-screen-server"
+DESC="server for an Android front-end"
+
+STARTOPTS="--start --background --chuid libipho:libipho -x $DAEMON -- ${LIBIPHO_SCREEN_FIFO}"
+STOPOPTS="--stop -x $DAEMON"
+
+case "$1" in
+  start)
+    echo -n "Starting $DESC: "
+    start-stop-daemon $STARTOPTS
+    echo "$NAME."
+    ;;
+  stop)
+    echo -n "Stopping $DESC: "
+    start-stop-daemon $STOPOPTS
+    rm -f $PIDFILE
+    echo "$NAME."
+    ;;
+  restart|force-reload)
+    echo -n "Restarting $DESC: "
+    start-stop-daemon $STOPOPTS
+    sleep 1
+    start-stop-daemon $STARTOPTS
+    echo "$NAME."
+    ;;
+ *)
+   echo "Usage: $NAME {start|stop|restart|force-reload}" >&2
+   exit 1
+   ;;
+esac
+
