@@ -63,7 +63,12 @@ while true; do
         cp ${SCREEN_TEMPLATE_FILE} ${SCREEN_TARGET_FILE}
       else
         log "Showing previous picture ${PICTURE}"
-        ${LIBIPHO_BASE}/screen/update_libipho_screen.sh ${PICTURE}
+        if [ "${USE_ANDROID_SCREEN}" = true ]; then
+          FULL_FILENAME=${HTML_DIR}/${PICTURE_RELATIVE_DIR}/${PICTURE}
+          echo ${FULL_FILENAME} > ${LIBIPHO_SCREEN_FIFO}
+        else
+          ${LIBIPHO_BASE}/tools/run_with_lock.sh ${SCREEN_LOCK} ${LIBIPHO_BASE}/screen/update_libipho_screen.sh ${PICTURE}
+        fi
       fi
     fi
   fi
